@@ -2,55 +2,33 @@
 
 ## Project Overview
 
-A comprehensive collection of custom **Nmap NSE (Nmap Scripting Engine)** scripts specialized in **defensive security auditing** of web servers, DNS infrastructure, and SSL/TLS endpoints. These scripts are engineered to detect common security misconfigurations, including missing critical HTTP security headers, inadequate cookie protection flags, weak cryptographic algorithms, DNS vulnerabilities, and other prevalent security issues frequently overlooked in production environments.
+A comprehensive collection of custom **Nmap NSE (Nmap Scripting Engine)** scripts specialized in **defensive security auditing** of web servers, DNS infrastructure, SMB/Windows services, and SSL/TLS endpoints. These scripts are engineered to detect common security misconfigurations, including missing critical HTTP security headers, inadequate cookie protection flags, weak cryptographic algorithms, DNS vulnerabilities, SMB misconfigurations, and other prevalent security issues frequently overlooked in production environments.
 
 **Project Language:** Lua 100%
 
 ---
 
-## 📋 Project Contents
+## 📋 Project Contents & Statistics
 
 ### 📁 Directory Structure
 
 ```
 Nmap-NSE-Script-Collection/
-├── HTTP/                                   # HTTP Protocol Security Audits
-│   ├── http-security-headers.nse           # Security Headers Audit
-│   ├── http-cookie-flags.nse               # Cookie Protection Audit
-│   ├── http-cors-config.nse                # CORS Configuration Analysis
-│   ├── http-cache-audit.nse                # HTTP Caching Strategy Check
-│   ├── http-error-disclosure.nse           # Information Disclosure Detection
-│   ├── http-methods-enum.nse               # HTTP Methods Enumeration
-│   ├── http-server-fingerprint.nse         # Server Technology Detection
-│   ├── http-dir-listing.nse                # Directory Listing Detection
-│   ├── http-robots-sitemap.nse             # robots.txt & Sitemap Analysis
-│   └── http-trace-method.nse               # HTTP TRACE Method Vulnerability Check
-│
-├── DNS/                                    # DNS Infrastructure Security Audits
-│   ├── dns-zone-transfer-check.nse         # Zone Transfer Vulnerability (AXFR)
-│   ├── dns-subdomain-enum.nse              # Subdomain Enumeration via Brute Force
-│   ├── dns-recursion-check.nse             # Open Resolver Detection
-│   ├── dns-amplification-risk.nse          # DNS Amplification Attack Risk
-│   ├── dns-cache-snooping.nse              # DNS Cache Snooping Detection
-│   ├── dns-srv-enum.nse                    # SRV Record Enumeration
-│   ├── dns-txt-spf-dmarc-audit.nse         # SPF/DMARC Email Security Audit
-│   ├── dns-soa-consistency-check.nse       # SOA Record Consistency Validation
-│   ├── dns-wildcard-detector.nse           # Wildcard DNS Record Detection
-│   └── dns-amplification-risk.nse          # DNS Amplification Vulnerability Check
-│
-├── SSL-TLS/                                # SSL/TLS Protocol Security Audits
-│   ├── ssl-weak-ciphers.nse                # Weak Cipher Suite Detection
-│   ├── ssl-protocol-versions.nse           # TLS Version Support Analysis
-│   ├── ssl-cert-info.nse                   # Certificate Information Extraction
-│   ├── ssl-cert-expiry.nse                 # Certificate Expiry Validation
-│   ├── ssl-cert-hostname-mismatch.nse      # Hostname Verification Check
-│   ├── ssl-cert-weak-signature.nse         # Weak Signature Algorithm Detection
-│   ├── ssl-compression-check.nse           # TLS Compression Vulnerability Check
-│   ├── ssl-ocsp-stapling.nse               # OCSP Stapling Configuration Audit
-│   └── ssl-secure-renegotiation.nse        # TLS Secure Renegotiation Verification
-│
-└── README.md                               # This file
+├── HTTP/                    # HTTP Protocol Security Audits (10 scripts)
+├── DNS/                     # DNS Infrastructure Security Audits (9 scripts)
+├── SMB/                     # SMB/Windows Protocol Security Audits (9 scripts)
+├── SSL-TLS/                 # SSL/TLS Protocol Security Audits (9 scripts)
+└── README.md                # This file
 ```
+
+### 📊 Statistics
+- **Total Scripts:** 37
+- **HTTP Scripts:** 10
+- **DNS Scripts:** 9
+- **SMB Scripts:** 9
+- **SSL/TLS Scripts:** 9
+- **Total Lines of Code:** 3,000+ Lua
+- **Security Checks:** 90+
 
 ---
 
@@ -60,29 +38,24 @@ Nmap-NSE-Script-Collection/
 
 - **Nmap** v7.40 or newer
 - **Lua** runtime (included with Nmap)
-- **Network access** to target systems (local or remote)
+- **Network access** to target systems
 - Administrative/root privileges (optional, for system-wide installation)
 
 ### Installation Steps
 
-#### 1. **Clone the Repository**
+#### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/NexzaDev/Nmap-NSE-Script-Collection.git
 cd Nmap-NSE-Script-Collection
 ```
 
-#### 2. **Locate Your Nmap NSE Scripts Directory**
-
-Depending on your operating system:
+#### 2. Locate Your Nmap NSE Scripts Directory
 
 **Linux/macOS:**
 ```bash
-# User-level default location
 ~/.nmap/scripts
-
-# System-wide location (requires root)
-/usr/share/nmap/scripts
+/usr/share/nmap/scripts (system-wide)
 ```
 
 **Windows:**
@@ -90,254 +63,303 @@ Depending on your operating system:
 C:\Program Files\Nmap\scripts
 ```
 
-**Verify Nmap installation:**
+#### 3. Install Scripts
+
+**Linux/macOS (Recommended - Symlinks):**
 ```bash
-nmap --version
-```
-
-#### 3. **Copy Scripts to NSE Directory**
-
-**Option A: Symbolic Link (Recommended)**
-
-**Linux/macOS:**
-```bash
-# Create symlinks for easy updates
 ln -s $(pwd)/HTTP ~/.nmap/scripts/custom-http
 ln -s $(pwd)/DNS ~/.nmap/scripts/custom-dns
+ln -s $(pwd)/SMB ~/.nmap/scripts/custom-smb
 ln -s $(pwd)/SSL-TLS ~/.nmap/scripts/custom-ssl-tls
-
-# Verify installation
-ls -la ~/.nmap/scripts/ | grep custom
 ```
 
-**Option B: Direct Copy**
-
-**Linux/macOS:**
+**Linux/macOS (Direct Copy):**
 ```bash
-cp -r HTTP/* ~/.nmap/scripts/
-cp -r DNS/* ~/.nmap/scripts/
-cp -r SSL-TLS/* ~/.nmap/scripts/
+cp -r HTTP/* DNS/* SMB/* SSL-TLS/* ~/.nmap/scripts/
 chmod +x ~/.nmap/scripts/*.nse
 ```
 
-**Windows (PowerShell - Run as Administrator):**
+**Windows PowerShell (Admin):**
 ```powershell
-# Method 1: Symbolic Link (Windows 10+)
-$source = (Get-Location).Path
-New-Item -ItemType SymbolicLink `
-  -Path "C:\Program Files\Nmap\scripts\custom-http" `
-  -Target "$source\HTTP" -Force
-
-New-Item -ItemType SymbolicLink `
-  -Path "C:\Program Files\Nmap\scripts\custom-dns" `
-  -Target "$source\DNS" -Force
-
-New-Item -ItemType SymbolicLink `
-  -Path "C:\Program Files\Nmap\scripts\custom-ssl-tls" `
-  -Target "$source\SSL-TLS" -Force
-
-# Method 2: Direct Copy
 Copy-Item -Path "HTTP\*" -Destination "C:\Program Files\Nmap\scripts\" -Recurse -Force
 Copy-Item -Path "DNS\*" -Destination "C:\Program Files\Nmap\scripts\" -Recurse -Force
+Copy-Item -Path "SMB\*" -Destination "C:\Program Files\Nmap\scripts\" -Recurse -Force
 Copy-Item -Path "SSL-TLS\*" -Destination "C:\Program Files\Nmap\scripts\" -Recurse -Force
 ```
 
-#### 4. **Update NSE Database**
+#### 4. Update NSE Database
 
 ```bash
 nmap --script-updatedb
 ```
 
-#### 5. **Verify Installation**
+#### 5. Verify Installation
 
 ```bash
-# Check if scripts are recognized
 nmap --script-help http-security-headers
 nmap --script-help dns-zone-transfer-check
-
-# List all custom scripts
-nmap --script-help | grep -E "(http-|dns-|ssl-)" | head -30
+nmap --script-help smb-null-session-check
+nmap --script-help ssl-weak-ciphers
 ```
 
 ---
 
-## 📖 Usage Guide
+## 🌐 HTTP Security Audits
 
-### Basic Syntax
+### Category Overview
+HTTP protocol security audits focusing on web server misconfigurations, header validation, and protocol vulnerabilities.
 
-```bash
-nmap -p <PORT> --script <SCRIPT_NAME> [OPTIONS] <TARGET>
-```
-
-### Common Options
-
-```bash
--p <port>              # Specify port(s)
--sV                    # Version detection
--sC                    # Default scripts
--v                     # Verbose output
--vv                    # Very verbose output
--oN <file>             # Normal output
--oX <file>             # XML output
--oG <file>             # Grepable output
--oA <file>             # All formats
-```
+**Port:** 80/443 | **Protocol:** HTTP/HTTPS
 
 ---
 
-## 🌐 HTTP Security Scripts
+### HTTP Scripts List
 
-### 1. **http-security-headers** - Security Headers Audit
+#### 1. **http-security-headers** - HTTP Security Headers Audit
+**Description:** Audits HTTP security headers across multiple application paths for presence and quality.
 
-Comprehensive audit of HTTP security headers across multiple application paths. Evaluates both presence and quality of configurations.
+**Risk Level:** 🟡 MEDIUM | **Category:** Defensive
 
-**Headers Checked:**
+**What it checks:**
 - Strict-Transport-Security (HSTS)
 - Content-Security-Policy (CSP)
 - X-Frame-Options
 - X-Content-Type-Options
 - Referrer-Policy
 - Permissions-Policy
-- Cross-Origin-Opener-Policy (COOP)
-- Cross-Origin-Embedder-Policy (COEP)
-- Cross-Origin-Resource-Policy (CORP)
-- X-XSS-Protection
+- CORS headers
 
-**Basic Usage:**
+**How to Execute:**
 ```bash
+# Basic scan
 nmap -p 80,443 --script http-security-headers example.com
-```
 
-**Advanced Usage:**
-```bash
+# Verbose output
 nmap -p 80,443 --script http-security-headers -v example.com
-nmap -p 80,443 --script http-security-headers -sV example.com
+
+# Multiple targets
 nmap -p 80,443 --script http-security-headers 192.168.1.0/24
 ```
 
+**Sample Output:**
+```
+| http-security-headers:
+|   Headers missing: Strict-Transport-Security, Content-Security-Policy
+|   Headers present: X-Frame-Options: DENY
+|   Weak configurations: HSTS max-age below recommended
+```
+
 ---
 
-### 2. **http-cookie-flags** - Cookie Security Audit
+#### 2. **http-cookie-flags** - Cookie Security Audit
+**Description:** Analyzes Set-Cookie headers for protective flags and secure configuration.
 
-Analyzes Set-Cookie headers for protective flags and secure configuration.
+**Risk Level:** 🟡 MEDIUM | **Category:** Defensive
 
-**Checks Performed:**
-- Secure flag (HTTPS-only transmission)
+**What it checks:**
+- Secure flag (HTTPS-only)
 - HttpOnly flag (XSS protection)
 - SameSite attribute (CSRF protection)
-- Domain scope analysis
-- Expiry validation
+- Domain scope
+- Expiry settings
 
-**Usage:**
+**How to Execute:**
 ```bash
+# Basic scan
 nmap -p 80,443 --script http-cookie-flags example.com
+
+# Very verbose
 nmap -p 80,443 --script http-cookie-flags -vv example.com
+
+# Custom paths
+nmap -p 80,443 --script http-cookie-flags --script-args paths={"/admin","/api"} example.com
+```
+
+**Sample Output:**
+```
+| http-cookie-flags:
+|   Flagged cookies:
+|     - PHPSESSID: missing Secure flag; missing HttpOnly flag
+|   Cookies with adequate flags:
+|     - _ga: Secure=true HttpOnly=true SameSite=Strict
 ```
 
 ---
 
-### 3. **http-cors-config** - CORS Configuration Analysis
+#### 3. **http-cors-config** - CORS Configuration Analysis
+**Description:** Evaluates CORS policies for overly permissive configurations.
 
-Evaluates Cross-Origin Resource Sharing (CORS) policies for overly permissive configurations.
+**Risk Level:** 🟡 MEDIUM | **Category:** Discovery
 
+**What it checks:**
+- Wildcard origin (*) allowance
+- Credential leakage
+- Method restrictions
+- Header restrictions
+
+**How to Execute:**
 ```bash
 nmap -p 80,443 --script http-cors-config example.com
+nmap -p 80,443 --script http-cors-config -v example.com
 ```
 
 ---
 
-### 4. **http-methods-enum** - HTTP Methods Enumeration
+#### 4. **http-cache-audit** - HTTP Caching Strategy
+**Description:** Analyzes cache control headers and caching behavior for sensitive data leakage.
 
-Identifies enabled HTTP methods and flags potentially dangerous ones.
+**Risk Level:** 🟢 LOW | **Category:** Defensive
 
-```bash
-nmap -p 80,443 --script http-methods-enum example.com
-```
+**What it checks:**
+- Cache-Control directives
+- Expires headers
+- ETag usage
+- Sensitive data caching
 
-**Dangerous Methods Detected:**
-- PUT (file upload/modification)
-- DELETE (resource deletion)
-- CONNECT (proxy tunneling)
-- TRACE (HTTP request reflection)
-
----
-
-### 5. **http-server-fingerprint** - Web Server Detection
-
-Identifies web server technology, version, and associated information disclosure risks.
-
-```bash
-nmap -p 80,443 --script http-server-fingerprint example.com
-```
-
----
-
-### 6. **http-error-disclosure** - Error-Based Information Disclosure
-
-Discovers sensitive information exposed through error messages.
-
-```bash
-nmap -p 80,443 --script http-error-disclosure example.com
-```
-
----
-
-### 7. **http-dir-listing** - Directory Listing Detection
-
-Identifies accessible directories with enabled listing.
-
-```bash
-nmap -p 80,443 --script http-dir-listing example.com
-```
-
----
-
-### 8. **http-cache-audit** - HTTP Caching Strategy
-
-Analyzes cache control headers and caching behavior.
-
+**How to Execute:**
 ```bash
 nmap -p 80,443 --script http-cache-audit example.com
 ```
 
 ---
 
-### 9. **http-robots-sitemap** - robots.txt & Sitemap Analysis
+#### 5. **http-error-disclosure** - Information Disclosure Detection
+**Description:** Discovers sensitive information exposed through error messages and exception handling.
 
-Extracts information from robots.txt and sitemap.xml files.
+**Risk Level:** 🟡 MEDIUM | **Category:** Discovery
 
+**What it checks:**
+- Stack traces
+- Database error messages
+- Path disclosure
+- Configuration details
+
+**How to Execute:**
+```bash
+nmap -p 80,443 --script http-error-disclosure example.com
+nmap -p 80,443 --script http-error-disclosure -v example.com
+```
+
+---
+
+#### 6. **http-methods-enum** - HTTP Methods Enumeration
+**Description:** Identifies enabled HTTP methods and flags potentially dangerous ones.
+
+**Risk Level:** 🟡 MEDIUM | **Category:** Discovery
+
+**What it checks:**
+- PUT method (file modification)
+- DELETE method (resource deletion)
+- CONNECT method (proxy tunneling)
+- TRACE method (XST vulnerability)
+- Custom methods
+
+**How to Execute:**
+```bash
+nmap -p 80,443 --script http-methods-enum example.com
+```
+
+---
+
+#### 7. **http-server-fingerprint** - Web Server Detection
+**Description:** Identifies web server technology, version, and associated information disclosure risks.
+
+**Risk Level:** 🟢 LOW | **Category:** Discovery
+
+**What it checks:**
+- Server software identification
+- Version extraction
+- Framework detection
+- Information leakage
+
+**How to Execute:**
+```bash
+nmap -p 80,443 --script http-server-fingerprint example.com
+```
+
+---
+
+#### 8. **http-dir-listing** - Directory Listing Detection
+**Description:** Identifies accessible directories with enabled listing (index generation).
+
+**Risk Level:** 🟡 MEDIUM | **Category:** Discovery
+
+**What it checks:**
+- Directory browsing enabled
+- Accessible paths
+- File enumeration
+
+**How to Execute:**
+```bash
+nmap -p 80,443 --script http-dir-listing example.com
+```
+
+---
+
+#### 9. **http-robots-sitemap** - robots.txt & Sitemap Analysis
+**Description:** Extracts information from robots.txt and sitemap.xml files.
+
+**Risk Level:** 🟢 LOW | **Category:** Discovery
+
+**What it checks:**
+- Disallowed paths
+- Crawl delay directives
+- Sitemap URLs
+- Sensitive endpoint disclosure
+
+**How to Execute:**
 ```bash
 nmap -p 80,443 --script http-robots-sitemap example.com
 ```
 
 ---
 
-### 10. **http-trace-method** - HTTP TRACE Method Vulnerability
+#### 10. **http-trace-method** - HTTP TRACE Method Vulnerability
+**Description:** Detects and validates the HTTP TRACE method (XST vulnerability).
 
-Detects the HTTP TRACE method (XST vulnerability).
+**Risk Level:** 🔴 HIGH | **Category:** Vulnerability
 
+**What it checks:**
+- TRACE method enablement
+- XST vulnerability presence
+
+**How to Execute:**
 ```bash
 nmap -p 80,443 --script http-trace-method example.com
+nmap -p 80,443 --script http-trace-method -v example.com
 ```
 
 ---
 
-## 🔍 DNS Security Scripts
+## 🔍 DNS Security Audits
 
-### 1. **dns-zone-transfer-check** - Zone Transfer Vulnerability (AXFR)
+### Category Overview
+DNS infrastructure security audits focusing on zone configuration, DNS poisoning risks, and information disclosure.
 
-Attempts a full zone transfer (AXFR) to detect misconfigured DNS servers allowing unauthenticated transfers.
+**Port:** 53 | **Protocol:** DNS (UDP/TCP)
 
-**Risk Level:** 🔴 **CRITICAL** - Exposes complete DNS zone data
+---
 
-**Usage:**
+### DNS Scripts List
+
+#### 1. **dns-zone-transfer-check** - Zone Transfer Vulnerability (AXFR)
+**Description:** Attempts full zone transfer to detect misconfigured DNS servers allowing unauthenticated transfers.
+
+**Risk Level:** 🔴 CRITICAL | **Category:** Vulnerability
+
+**What it checks:**
+- Unauthenticated AXFR requests
+- Zone data exposure
+- Record types enumeration
+
+**How to Execute:**
 ```bash
 # Specify target domain
 nmap -p 53 --script dns-zone-transfer-check \
   --script-args dns-zone-transfer-check.domain=example.com \
   <DNS_SERVER_IP>
 
-# Example with specific DNS server
+# Example
 nmap -p 53 --script dns-zone-transfer-check \
   --script-args dns-zone-transfer-check.domain=example.com \
   8.8.8.8
@@ -346,31 +368,31 @@ nmap -p 53 --script dns-zone-transfer-check \
 **Sample Output:**
 ```
 | dns-zone-transfer-check:
-|   Domain tested: example.com
-|   DNS response code: 0
-|   Result: ZONE TRANSFER SUCCEEDED - 247 record(s) returned
-|   Record types observed:
-|     - A: 50
-|     - MX: 5
-|     - NS: 4
-|     - CNAME: 15
+|   Domain: example.com
+|   Result: ZONE TRANSFER SUCCEEDED - 247 records returned
+|   Record types: A: 50, MX: 5, NS: 4, CNAME: 15
 ```
 
 ---
 
-### 2. **dns-subdomain-enum** - Subdomain Enumeration
+#### 2. **dns-subdomain-enum** - Subdomain Enumeration
+**Description:** Brute forces common subdomain labels to discover subdomains and IP addresses.
 
-Brute forces common subdomain labels to discover subdomains and their IP addresses.
+**Risk Level:** 🟡 MEDIUM | **Category:** Discovery
 
-**Common Subdomains Tested:** 50+ (www, mail, api, dev, admin, staging, etc.)
+**What it checks:**
+- 50+ common subdomains (www, mail, api, dev, admin, etc.)
+- A record resolution
+- IP address mapping
 
-**Usage:**
+**How to Execute:**
 ```bash
+# Specify domain
 nmap -p 53 --script dns-subdomain-enum \
   --script-args dns-subdomain-enum.domain=example.com \
   <DNS_SERVER_IP>
 
-# Against public DNS
+# Public DNS server
 nmap -p 53 --script dns-subdomain-enum \
   --script-args dns-subdomain-enum.domain=example.com \
   8.8.8.8
@@ -379,70 +401,95 @@ nmap -p 53 --script dns-subdomain-enum \
 **Sample Output:**
 ```
 | dns-subdomain-enum:
-|   Domain tested: example.com
-|   Subdomain labels tried: 50
+|   Domain: example.com
 |   Resolved subdomains:
 |     - www.example.com -> 93.184.216.34
 |     - mail.example.com -> 93.184.216.35
 |     - api.example.com -> 93.184.216.36
-|     - admin.example.com -> 93.184.216.37
 ```
 
 ---
 
-### 3. **dns-recursion-check** - Open Resolver Detection
+#### 3. **dns-recursion-check** - Open Resolver Detection
+**Description:** Detects if DNS server allows recursive queries for external domains (open resolver).
 
-Detects if a DNS server allows recursive queries for external domains (open resolver).
+**Risk Level:** 🔴 CRITICAL | **Category:** Vulnerability
 
-**Risk Level:** 🔴 **CRITICAL** - Can be abused for DNS amplification attacks
+**What it checks:**
+- Recursion availability
+- External domain resolution
+- Open resolver exploitation risk
 
-**Usage:**
+**How to Execute:**
 ```bash
+# Check if open resolver
 nmap -p 53 --script dns-recursion-check <DNS_SERVER_IP>
 
 # Example
 nmap -p 53 --script dns-recursion-check 192.168.1.1
+nmap -p 53 --script dns-recursion-check 8.8.8.8
 ```
 
 **Sample Output:**
 ```
 | dns-recursion-check:
-|   Open resolver behavior: LIKELY OPEN RESOLVER - server recursed and resolved external domains
+|   Status: LIKELY OPEN RESOLVER
 |   Evidence:
-|     - www.iana.org -> RA=1, rcode=0, 1 answer(s) returned (server resolved externally)
-|     - a.root-servers.net -> RA=1, rcode=0, 1 answer(s) returned
+|     - www.iana.org -> RA=1, rcode=0 (resolved externally)
+|     - a.root-servers.net -> RA=1, rcode=0
 ```
 
 ---
 
-### 4. **dns-amplification-risk** - DNS Amplification Attack Risk
+#### 4. **dns-amplification-risk** - DNS Amplification Attack Risk
+**Description:** Evaluates potential for DNS server abuse in amplification attacks.
 
-Evaluates the potential for the DNS server to be used in amplification attacks.
+**Risk Level:** 🟠 HIGH | **Category:** Vulnerability
 
+**What it checks:**
+- Response size amplification
+- Amplification factor
+- Attack potential
+
+**How to Execute:**
 ```bash
 nmap -p 53 --script dns-amplification-risk <DNS_SERVER_IP>
+nmap -p 53 --script dns-amplification-risk -v 192.168.1.1
 ```
 
 ---
 
-### 5. **dns-cache-snooping** - DNS Cache Snooping Detection
+#### 5. **dns-cache-snooping** - DNS Cache Snooping Detection
+**Description:** Detects if DNS server allows cache snooping queries for information leakage.
 
-Detects if a DNS server allows cache snooping queries.
+**Risk Level:** 🟡 MEDIUM | **Category:** Discovery
 
-**Risk Level:** 🟡 **MEDIUM** - Can leak cached query information
+**What it checks:**
+- Cache snooping ability
+- Previously cached queries
+- Information disclosure
 
+**How to Execute:**
 ```bash
 nmap -p 53 --script dns-cache-snooping <DNS_SERVER_IP>
 ```
 
 ---
 
-### 6. **dns-srv-enum** - SRV Record Enumeration
+#### 6. **dns-srv-enum** - SRV Record Enumeration
+**Description:** Enumerates SRV records for identifying services (Kerberos, LDAP, SIP, etc.).
 
-Enumerates SRV records for a domain (useful for identifying services like Kerberos, LDAP, SIP).
+**Risk Level:** 🟢 LOW | **Category:** Discovery
 
-**Usage:**
+**What it checks:**
+- _kerberos._tcp/udp records
+- _ldap._tcp records
+- _sip._tcp/udp records
+- Service discovery
+
+**How to Execute:**
 ```bash
+# Enumerate SRV records
 nmap -p 53 --script dns-srv-enum \
   --script-args dns-srv-enum.domain=example.com \
   <DNS_SERVER_IP>
@@ -452,25 +499,25 @@ nmap -p 53 --script dns-srv-enum \
 ```
 | dns-srv-enum:
 |   Domain: example.com
-|   SRV Records Found:
+|   SRV Records:
 |     - _kerberos._tcp: kdc1.example.com:88
 |     - _ldap._tcp: ldap1.example.com:389
-|     - _kerberos._udp: kdc1.example.com:88
 ```
 
 ---
 
-### 7. **dns-txt-spf-dmarc-audit** - Email Security Records Audit
+#### 7. **dns-txt-spf-dmarc-audit** - Email Security Records Audit
+**Description:** Analyzes SPF, DMARC, and TXT records for email security configuration.
 
-Analyzes SPF, DMARC, and other TXT records for email security configuration.
+**Risk Level:** 🟡 MEDIUM | **Category:** Defensive
 
-**Checks:**
-- SPF record validation
-- DMARC policy analysis
-- DKIM configuration
+**What it checks:**
+- SPF record validity
+- DMARC policy configuration
+- DKIM setup
 - Domain verification records
 
-**Usage:**
+**How to Execute:**
 ```bash
 nmap -p 53 --script dns-txt-spf-dmarc-audit \
   --script-args dns-txt-spf-dmarc-audit.domain=example.com \
@@ -481,17 +528,24 @@ nmap -p 53 --script dns-txt-spf-dmarc-audit \
 ```
 | dns-txt-spf-dmarc-audit:
 |   Domain: example.com
-|   SPF Record: v=spf1 include:sendgrid.net ~all
-|   DMARC Policy: v=DMARC1; p=reject; rua=mailto:dmarc@example.com
-|   Configuration Status: SECURE
+|   SPF: v=spf1 include:sendgrid.net ~all
+|   DMARC: v=DMARC1; p=reject; rua=mailto:dmarc@example.com
+|   Status: SECURE
 ```
 
 ---
 
-### 8. **dns-soa-consistency-check** - SOA Record Consistency
+#### 8. **dns-soa-consistency-check** - SOA Record Consistency
+**Description:** Validates SOA record consistency across authoritative nameservers.
 
-Validates SOA (Start of Authority) record consistency across authoritative nameservers.
+**Risk Level:** 🟢 LOW | **Category:** Defensive
 
+**What it checks:**
+- SOA consistency
+- Serial number matching
+- Nameserver agreement
+
+**How to Execute:**
 ```bash
 nmap -p 53 --script dns-soa-consistency-check \
   --script-args dns-soa-consistency-check.domain=example.com \
@@ -500,10 +554,16 @@ nmap -p 53 --script dns-soa-consistency-check \
 
 ---
 
-### 9. **dns-wildcard-detector** - Wildcard DNS Record Detection
+#### 9. **dns-wildcard-detector** - Wildcard DNS Record Detection
+**Description:** Detects if domain uses wildcard DNS records.
 
-Detects if a domain uses wildcard DNS records.
+**Risk Level:** 🟢 LOW | **Category:** Discovery
 
+**What it checks:**
+- Wildcard record presence
+- Catch-all behavior
+
+**How to Execute:**
 ```bash
 nmap -p 53 --script dns-wildcard-detector \
   --script-args dns-wildcard-detector.domain=example.com \
@@ -512,118 +572,516 @@ nmap -p 53 --script dns-wildcard-detector \
 
 ---
 
-### 10. **dns-amplification-risk** - DNS Amplification Risk Assessment
+## 🔐 SMB Protocol Security Audits
 
-Comprehensive assessment of DNS amplification attack vulnerability.
+### Category Overview
+SMB/Windows protocol security audits focusing on file sharing configuration, authentication, and information disclosure.
 
+**Port:** 139/445 | **Protocol:** SMB (NetBIOS/Direct Hosting)
+
+---
+
+### SMB Scripts List
+
+#### 1. **smb-null-session-check** - Null Session Vulnerability
+**Description:** Detects if SMB server allows null session connections (anonymous access).
+
+**Risk Level:** 🟠 HIGH | **Category:** Vulnerability
+
+**What it checks:**
+- Null session connectivity
+- Anonymous SMB access
+- NULL share enumeration
+
+**How to Execute:**
 ```bash
-nmap -p 53 --script dns-amplification-risk <DNS_SERVER_IP>
+# Basic check
+nmap -p 139,445 --script smb-null-session-check <TARGET>
+
+# Verbose
+nmap -p 139,445 --script smb-null-session-check -v example.com
+
+# Specific port
+nmap -p 445 --script smb-null-session-check example.com
+```
+
+**Sample Output:**
+```
+| smb-null-session-check:
+|   Status: VULNERABLE
+|   Message: Null session allowed on SMB server
+|   Risk: High - Anonymous access enabled
 ```
 
 ---
 
-## 🔐 SSL/TLS Security Scripts
+#### 2. **smb-guest-access-check** - Guest Account Access
+**Description:** Checks if SMB server allows guest account access without credentials.
 
-### 1. **ssl-weak-ciphers** - Weak Cipher Suite Detection
+**Risk Level:** 🟠 HIGH | **Category:** Vulnerability
 
-Identifies weak or deprecated TLS cipher suites accepted by the server.
+**What it checks:**
+- Guest account enablement
+- Anonymous share access
+- Unauthenticated listing
 
-**Weak Cipher Categories:**
+**How to Execute:**
+```bash
+nmap -p 139,445 --script smb-guest-access-check <TARGET>
+nmap -p 139,445 --script smb-guest-access-check -v example.com
+```
+
+**Sample Output:**
+```
+| smb-guest-access-check:
+|   Status: ENABLED
+|   Message: Guest access is permitted
+|   Accessible shares: ADMIN$, C$, IPC$
+```
+
+---
+
+#### 3. **smb-security-level** - SMB Security Configuration
+**Description:** Audits SMB security level and authentication configuration.
+
+**Risk Level:** 🟡 MEDIUM | **Category:** Defensive
+
+**What it checks:**
+- Security level setting (user/domain/server)
+- Encryption requirements
+- Authentication protocols
+- Password policy
+
+**How to Execute:**
+```bash
+nmap -p 139,445 --script smb-security-level <TARGET>
+nmap -p 445 --script smb-security-level -v example.com
+```
+
+**Sample Output:**
+```
+| smb-security-level:
+|   Security Level: user
+|   Encryption: Not required
+|   Authentication: NTLM enabled
+|   Risk: Weak - Plaintext password allowed
+```
+
+---
+
+#### 4. **smb-signing-config** - SMB Message Signing Configuration
+**Description:** Validates SMB message signing settings for integrity protection.
+
+**Risk Level:** 🟡 MEDIUM | **Category:** Defensive
+
+**What it checks:**
+- Message signing enabled
+- Signature enforcement
+- Negotiation capability
+
+**How to Execute:**
+```bash
+nmap -p 139,445 --script smb-signing-config <TARGET>
+nmap -p 139,445 --script smb-signing-config -v example.com
+```
+
+**Sample Output:**
+```
+| smb-signing-config:
+|   Signing Supported: true
+|   Signing Required: false
+|   Status: WEAK - Signing optional
+```
+
+---
+
+#### 5. **smb-capabilities** - SMB Capabilities Detection
+**Description:** Enumerates SMB capabilities and supported features.
+
+**Risk Level:** 🟢 LOW | **Category:** Discovery
+
+**What it checks:**
+- Supported SMB versions
+- Extended security support
+- Unicode capability
+- Large file support
+- DFS support
+
+**How to Execute:**
+```bash
+nmap -p 139,445 --script smb-capabilities <TARGET>
+nmap -p 445 --script smb-capabilities -v example.com
+```
+
+**Sample Output:**
+```
+| smb-capabilities:
+|   Supported SMB: 2.1, 3.0, 3.1.1
+|   Extended Security: true
+|   Unicode: true
+|   DFS: true
+```
+
+---
+
+#### 6. **smb-protocol-dialects** - SMB Protocol Dialects
+**Description:** Identifies supported SMB protocol dialects and versions.
+
+**Risk Level:** 🟢 LOW | **Category:** Discovery
+
+**What it checks:**
+- SMBv1 support (deprecated)
+- SMBv2 support
+- SMBv3 support
+- Protocol negotiation
+
+**How to Execute:**
+```bash
+nmap -p 139,445 --script smb-protocol-dialects <TARGET>
+```
+
+**Sample Output:**
+```
+| smb-protocol-dialects:
+|   Dialects:
+|     - SMB 2.02 (deprecated)
+|     - SMB 2.1
+|     - SMB 3.0
+|   Status: SMBv1 disabled (good)
+```
+
+---
+
+#### 7. **smb-extended-security** - Extended Security Audit
+**Description:** Audits SMB extended security features and configuration.
+
+**Risk Level:** 🟡 MEDIUM | **Category:** Defensive
+
+**What it checks:**
+- Extended security negotiation
+- Kerberos support
+- SPNEGO support
+- Encryption capability
+
+**How to Execute:**
+```bash
+nmap -p 139,445 --script smb-extended-security <TARGET>
+nmap -p 445 --script smb-extended-security -v example.com
+```
+
+---
+
+#### 8. **smb-share-accessibility** - Share Access Enumeration
+**Description:** Enumerates SMB shares and tests accessibility without credentials.
+
+**Risk Level:** 🟡 MEDIUM | **Category:** Discovery
+
+**What it checks:**
+- Available shares
+- Anonymous accessible shares
+- Share permissions
+- Writable shares
+
+**How to Execute:**
+```bash
+nmap -p 139,445 --script smb-share-accessibility <TARGET>
+nmap -p 445 --script smb-share-accessibility -v example.com
+```
+
+**Sample Output:**
+```
+| smb-share-accessibility:
+|   Shares enumerated: 5
+|   Anonymous accessible:
+|     - ADMIN$ (read-write)
+|     - C$ (read-only)
+|   Restricted: USERS, DATA
+```
+
+---
+
+#### 9. **smb-buffer-limits** - SMB Buffer Configuration
+**Description:** Checks SMB buffer size and connection limits.
+
+**Risk Level:** 🟢 LOW | **Category:** Discovery
+
+**What it checks:**
+- Max buffer size
+- Connection limits
+- Performance settings
+- DoS vulnerability potential
+
+**How to Execute:**
+```bash
+nmap -p 139,445 --script smb-buffer-limits <TARGET>
+```
+
+**Sample Output:**
+```
+| smb-buffer-limits:
+|   Max buffer size: 65536 bytes
+|   Max connections: unlimited
+|   Max open files: 2048
+```
+
+---
+
+## 🛡️ SSL/TLS Protocol Security Audits
+
+### Category Overview
+SSL/TLS cryptographic protocol audits focusing on certificate validation, cipher strength, and protocol version security.
+
+**Port:** 443 | **Protocol:** HTTPS/TLS
+
+---
+
+### SSL/TLS Scripts List
+
+#### 1. **ssl-weak-ciphers** - Weak Cipher Suite Detection
+**Description:** Identifies weak or deprecated TLS cipher suites accepted by server.
+
+**Risk Level:** 🔴 CRITICAL | **Category:** Vulnerability
+
+**What it checks:**
 - NULL ciphers (no encryption)
 - Export-grade ciphers (40-bit)
-- DES/3DES ciphers
-- RC4 stream ciphers
-- Anonymous Diffie-Hellman
+- DES/3DES ciphers (weak)
+- RC4 ciphers (broken)
+- Anonymous Diffie-Hellman (no auth)
 
-**Usage:**
+**How to Execute:**
 ```bash
+# Basic scan
 nmap -p 443 --script ssl-weak-ciphers example.com
+
+# Verbose output
+nmap -p 443 --script ssl-weak-ciphers -v example.com
+
+# Multiple ports
+nmap -p 443,8443 --script ssl-weak-ciphers example.com
+```
+
+**Sample Output:**
+```
+| ssl-weak-ciphers:
+|   Weak ciphers ACCEPTED:
+|     - RC4 ciphers: TLS_RSA_WITH_RC4_128_SHA
+|     - 3DES ciphers: TLS_RSA_WITH_3DES_EDE_CBC_SHA
+|   Weak ciphers REJECTED:
+|     - NULL ciphers
+|     - Export-grade ciphers
 ```
 
 ---
 
-### 2. **ssl-protocol-versions** - TLS Version Support
+#### 2. **ssl-protocol-versions** - TLS Version Support Analysis
+**Description:** Audits supported TLS/SSL protocol versions and identifies deprecated implementations.
 
-Audits supported TLS/SSL protocol versions.
+**Risk Level:** 🟠 HIGH | **Category:** Discovery
 
-**Versions Checked:**
+**What it checks:**
 - SSLv3 (deprecated)
 - TLSv1.0 (deprecated)
 - TLSv1.1 (weak)
 - TLSv1.2 (secure)
 - TLSv1.3 (recommended)
 
-**Usage:**
+**How to Execute:**
 ```bash
+# Detect protocol versions
 nmap -p 443 --script ssl-protocol-versions example.com
+
+# Verbose output
+nmap -p 443 --script ssl-protocol-versions -v example.com
+```
+
+**Sample Output:**
+```
+| ssl-protocol-versions:
+|   Supported:
+|     - TLSv1.0 (WEAK - deprecated)
+|     - TLSv1.1 (WEAK - deprecated)
+|     - TLSv1.2 (SECURE)
+|     - TLSv1.3 (SECURE - recommended)
+|   Recommendation: Disable TLSv1.0/1.1
 ```
 
 ---
 
-### 3. **ssl-cert-info** - Certificate Information Extraction
+#### 3. **ssl-cert-info** - Certificate Information Extraction
+**Description:** Extracts and displays detailed SSL/TLS certificate information.
 
-Extracts detailed SSL/TLS certificate information.
+**Risk Level:** 🟢 LOW | **Category:** Discovery
 
+**What it checks:**
+- Subject and Issuer details
+- Public key information
+- Validity dates
+- Alternative names (SANs)
+- Key usage extensions
+- Certificate chain
+
+**How to Execute:**
 ```bash
+# Extract certificate details
 nmap -p 443 --script ssl-cert-info example.com
+
+# Verbose output
+nmap -p 443 --script ssl-cert-info -v example.com
+```
+
+**Sample Output:**
+```
+| ssl-cert-info:
+|   Subject: CN=example.com
+|   Issuer: CN=Let's Encrypt Authority X3
+|   Version: 3
+|   Public Key: RSA 2048-bit
+|   Validity: 2024-01-01 to 2025-01-01
+|   SANs: www.example.com, api.example.com
 ```
 
 ---
 
-### 4. **ssl-cert-expiry** - Certificate Expiry Validation
+#### 4. **ssl-cert-expiry** - Certificate Expiry Validation
+**Description:** Monitors SSL certificate expiration dates and provides renewal alerts.
 
-Monitors SSL certificate expiration dates.
+**Risk Level:** 🟡 MEDIUM | **Category:** Defensive
 
+**What it checks:**
+- Certificate expiration date
+- Days until expiry
+- Renewal status
+- Grace period alerts
+
+**How to Execute:**
 ```bash
+# Check expiry
 nmap -p 443 --script ssl-cert-expiry example.com
+
+# Verbose
+nmap -p 443 --script ssl-cert-expiry -v example.com
+```
+
+**Sample Output:**
+```
+| ssl-cert-expiry:
+|   Subject: CN=example.com
+|   Expires: 2025-06-15
+|   Days remaining: 45
+|   Status: WARNING - expires in 45 days
 ```
 
 ---
 
-### 5. **ssl-cert-hostname-mismatch** - Hostname Verification
+#### 5. **ssl-cert-hostname-mismatch** - Hostname Verification
+**Description:** Validates certificate hostname matches the target domain.
 
-Validates certificate hostname matches the target domain.
+**Risk Level:** 🔴 CRITICAL | **Category:** Vulnerability
 
+**What it checks:**
+- Certificate CN matching
+- SAN matching
+- Wildcard compatibility
+- MITM vulnerability
+
+**How to Execute:**
 ```bash
 nmap -p 443 --script ssl-cert-hostname-mismatch example.com
+nmap -p 443 --script ssl-cert-hostname-mismatch -v example.com
+```
+
+**Sample Output:**
+```
+| ssl-cert-hostname-mismatch:
+|   Target: example.com
+|   Certificate CN: other-domain.com
+|   Status: MISMATCH DETECTED
+|   Risk: Critical - MITM possible
 ```
 
 ---
 
-### 6. **ssl-cert-weak-signature** - Weak Signature Algorithm Detection
+#### 6. **ssl-cert-weak-signature** - Weak Signature Algorithm Detection
+**Description:** Identifies certificates signed with weak or deprecated algorithms.
 
-Identifies certificates with weak signature algorithms.
+**Risk Level:** 🟠 HIGH | **Category:** Vulnerability
 
+**What it checks:**
+- MD5 signature (broken)
+- SHA-1 signature (weak)
+- SHA-256 with small keys
+- Signature algorithm security
+
+**How to Execute:**
 ```bash
 nmap -p 443 --script ssl-cert-weak-signature example.com
 ```
 
----
-
-### 7. **ssl-compression-check** - TLS Compression Vulnerability
-
-Detects TLS compression enablement (CRIME vulnerability).
-
-```bash
-nmap -p 443 --script ssl-compression-check example.com
+**Sample Output:**
+```
+| ssl-cert-weak-signature:
+|   Subject: CN=oldcert.com
+|   Signature Algorithm: SHA1withRSA
+|   Status: WEAK - deprecated
+|   Recommendation: Replace certificate
 ```
 
 ---
 
-### 8. **ssl-ocsp-stapling** - OCSP Stapling Configuration
+#### 7. **ssl-compression-check** - TLS Compression Vulnerability
+**Description:** Detects TLS compression enablement (CRIME vulnerability risk).
 
-Validates OCSP stapling implementation.
+**Risk Level:** 🟠 HIGH | **Category:** Vulnerability
 
+**What it checks:**
+- Compression enablement
+- CRIME vulnerability risk
+- Deflate support
+
+**How to Execute:**
+```bash
+nmap -p 443 --script ssl-compression-check example.com
+```
+
+**Sample Output:**
+```
+| ssl-compression-check:
+|   Compression: ENABLED
+|   Vulnerability: CRIME attack possible
+|   Recommendation: Disable compression
+```
+
+---
+
+#### 8. **ssl-ocsp-stapling** - OCSP Stapling Configuration
+**Description:** Validates OCSP stapling implementation for certificate status verification.
+
+**Risk Level:** 🟢 LOW | **Category:** Defensive
+
+**What it checks:**
+- OCSP stapling enabled
+- Response validity
+- Staple freshness
+
+**How to Execute:**
 ```bash
 nmap -p 443 --script ssl-ocsp-stapling example.com
 ```
 
 ---
 
-### 9. **ssl-secure-renegotiation** - TLS Renegotiation Security
+#### 9. **ssl-secure-renegotiation** - TLS Renegotiation Security
+**Description:** Verifies secure renegotiation support (prevents CVE-2009-3555).
 
-Verifies secure renegotiation support.
+**Risk Level:** 🟡 MEDIUM | **Category:** Defensive
 
+**What it checks:**
+- Renegotiation support
+- Secure renegotiation flag
+- CVE-2009-3555 protection
+
+**How to Execute:**
 ```bash
 nmap -p 443 --script ssl-secure-renegotiation example.com
 ```
@@ -635,167 +1093,187 @@ nmap -p 443 --script ssl-secure-renegotiation example.com
 ### Scenario 1: Full Infrastructure Security Audit
 
 ```bash
-nmap -p 53,80,443 \
-  --script http-security-headers,http-cookie-flags,http-cors-config,\
-http-methods-enum,http-server-fingerprint,\
-dns-zone-transfer-check,dns-subdomain-enum,dns-recursion-check,\
-ssl-weak-ciphers,ssl-protocol-versions,ssl-cert-info,ssl-cert-expiry \
-  --script-args dns-zone-transfer-check.domain=example.com,\
-dns-subdomain-enum.domain=example.com \
+nmap -p 53,139,445,80,443 \
+  --script 'http-*,dns-*,smb-*,ssl-*' \
+  --script-args \
+    dns-zone-transfer-check.domain=example.com,\
+    dns-subdomain-enum.domain=example.com \
   -sV -v \
-  -oX security-audit.xml \
+  -oX infrastructure-audit.xml \
   example.com
 ```
 
-### Scenario 2: DNS Infrastructure Audit
+### Scenario 2: HTTP Only Audit
+
+```bash
+nmap -p 80,443 \
+  --script 'http-*' \
+  -v \
+  -oA http-audit \
+  example.com
+```
+
+### Scenario 3: DNS Infrastructure Audit
 
 ```bash
 nmap -p 53 \
   --script 'dns-*' \
-  --script-args dns-zone-transfer-check.domain=example.com,\
-dns-subdomain-enum.domain=example.com \
+  --script-args \
+    dns-zone-transfer-check.domain=example.com,\
+    dns-subdomain-enum.domain=example.com \
   -v \
   8.8.8.8
 ```
 
-### Scenario 3: Web Server Complete Audit
+### Scenario 4: Windows SMB Audit
 
 ```bash
-nmap -p 80,443 \
-  --script 'http-*,ssl-*' \
+nmap -p 139,445 \
+  --script 'smb-*' \
+  -v \
+  -oA smb-audit \
+  192.168.1.0/24
+```
+
+### Scenario 5: SSL/TLS Complete Audit
+
+```bash
+nmap -p 443,8443 \
+  --script 'ssl-*' \
   -sV -v \
-  -oA web-audit \
+  -oX tls-audit.xml \
   example.com
 ```
 
-### Scenario 4: Quick Security Assessment
+### Scenario 6: Quick Security Assessment
 
 ```bash
-nmap -p 53,80,443 \
+nmap -p 53,80,139,443,445 \
   --script http-security-headers,ssl-weak-ciphers,\
-dns-zone-transfer-check,dns-recursion-check \
+dns-zone-transfer-check,smb-null-session-check \
   --script-args dns-zone-transfer-check.domain=example.com \
   example.com
 ```
 
-### Scenario 5: Batch Processing
+---
 
-```bash
-cat > targets.txt << EOF
-example.com
-site1.com
-site2.com
-EOF
+## 📊 Script Reference Summary Table
 
-nmap -p 80,443 \
-  --script http-security-headers,ssl-weak-ciphers \
-  -iL targets.txt \
-  -oX batch-results.xml
-```
+| Category | Script Name | Port | Risk Level | Category | Check Type |
+|----------|-------------|------|-----------|----------|-----------|
+| **HTTP** | http-security-headers | 80/443 | 🟡 MEDIUM | Defensive | Headers |
+| **HTTP** | http-cookie-flags | 80/443 | 🟡 MEDIUM | Defensive | Cookies |
+| **HTTP** | http-cors-config | 80/443 | 🟡 MEDIUM | Discovery | CORS |
+| **HTTP** | http-cache-audit | 80/443 | 🟢 LOW | Defensive | Caching |
+| **HTTP** | http-error-disclosure | 80/443 | 🟡 MEDIUM | Discovery | Errors |
+| **HTTP** | http-methods-enum | 80/443 | 🟡 MEDIUM | Discovery | Methods |
+| **HTTP** | http-server-fingerprint | 80/443 | 🟢 LOW | Discovery | Fingerprint |
+| **HTTP** | http-dir-listing | 80/443 | 🟡 MEDIUM | Discovery | Listing |
+| **HTTP** | http-robots-sitemap | 80/443 | 🟢 LOW | Discovery | Meta |
+| **HTTP** | http-trace-method | 80/443 | 🔴 HIGH | Vulnerability | XST |
+| **DNS** | dns-zone-transfer-check | 53 | 🔴 CRITICAL | Vulnerability | AXFR |
+| **DNS** | dns-subdomain-enum | 53 | 🟡 MEDIUM | Discovery | Enumeration |
+| **DNS** | dns-recursion-check | 53 | 🔴 CRITICAL | Vulnerability | Recursion |
+| **DNS** | dns-amplification-risk | 53 | 🟠 HIGH | Vulnerability | Amplification |
+| **DNS** | dns-cache-snooping | 53 | 🟡 MEDIUM | Discovery | Cache |
+| **DNS** | dns-srv-enum | 53 | 🟢 LOW | Discovery | SRV Records |
+| **DNS** | dns-txt-spf-dmarc-audit | 53 | 🟡 MEDIUM | Defensive | Email |
+| **DNS** | dns-soa-consistency-check | 53 | 🟢 LOW | Defensive | SOA |
+| **DNS** | dns-wildcard-detector | 53 | 🟢 LOW | Discovery | Wildcards |
+| **SMB** | smb-null-session-check | 139/445 | 🟠 HIGH | Vulnerability | Auth |
+| **SMB** | smb-guest-access-check | 139/445 | 🟠 HIGH | Vulnerability | Auth |
+| **SMB** | smb-security-level | 139/445 | 🟡 MEDIUM | Defensive | Config |
+| **SMB** | smb-signing-config | 139/445 | 🟡 MEDIUM | Defensive | Signing |
+| **SMB** | smb-capabilities | 139/445 | 🟢 LOW | Discovery | Features |
+| **SMB** | smb-protocol-dialects | 139/445 | 🟢 LOW | Discovery | Dialects |
+| **SMB** | smb-extended-security | 139/445 | 🟡 MEDIUM | Defensive | Security |
+| **SMB** | smb-share-accessibility | 139/445 | 🟡 MEDIUM | Discovery | Shares |
+| **SMB** | smb-buffer-limits | 139/445 | 🟢 LOW | Discovery | Limits |
+| **SSL/TLS** | ssl-weak-ciphers | 443 | 🔴 CRITICAL | Vulnerability | Ciphers |
+| **SSL/TLS** | ssl-protocol-versions | 443 | 🟠 HIGH | Discovery | Versions |
+| **SSL/TLS** | ssl-cert-info | 443 | 🟢 LOW | Discovery | Certificate |
+| **SSL/TLS** | ssl-cert-expiry | 443 | 🟡 MEDIUM | Defensive | Expiry |
+| **SSL/TLS** | ssl-cert-hostname-mismatch | 443 | 🔴 CRITICAL | Vulnerability | Hostname |
+| **SSL/TLS** | ssl-cert-weak-signature | 443 | 🟠 HIGH | Vulnerability | Signature |
+| **SSL/TLS** | ssl-compression-check | 443 | 🟠 HIGH | Vulnerability | Compression |
+| **SSL/TLS** | ssl-ocsp-stapling | 443 | 🟢 LOW | Defensive | OCSP |
+| **SSL/TLS** | ssl-secure-renegotiation | 443 | 🟡 MEDIUM | Defensive | Renegotiation |
 
 ---
 
-## 📊 Script Reference Tables
+## 🔍 Risk Level Guide
 
-### HTTP Scripts
+### 🔴 CRITICAL - Immediate Action Required
+- Exploit possible without authentication
+- Complete system compromise risk
+- Immediate vulnerability patch needed
+- Examples: Zone transfer allowed, weak ciphers, null sessions
 
-| Script Name | Port | Category | Threat Level |
-|-------------|------|----------|--------------|
-| http-security-headers | 80/443 | Defensive | MEDIUM |
-| http-cookie-flags | 80/443 | Defensive | MEDIUM |
-| http-cors-config | 80/443 | Discovery | MEDIUM |
-| http-cache-audit | 80/443 | Defensive | LOW |
-| http-error-disclosure | 80/443 | Discovery | MEDIUM |
-| http-methods-enum | 80/443 | Discovery | MEDIUM |
-| http-server-fingerprint | 80/443 | Discovery | LOW |
-| http-dir-listing | 80/443 | Discovery | MEDIUM |
-| http-robots-sitemap | 80/443 | Discovery | LOW |
-| http-trace-method | 80/443 | Vulnerability | HIGH |
+### 🟠 HIGH - High Priority
+- Significant security impact
+- Increased attack surface
+- Should be addressed soon
+- Examples: Deprecated TLS, guest access, missing headers
 
-### DNS Scripts
+### 🟡 MEDIUM - Medium Priority
+- Moderate security issue
+- Defense in depth improvement
+- Should be addressed
+- Examples: Cache snooping, weak signing
 
-| Script Name | Port | Category | Threat Level |
-|-------------|------|----------|--------------|
-| dns-zone-transfer-check | 53 | Vulnerability | CRITICAL |
-| dns-subdomain-enum | 53 | Discovery | MEDIUM |
-| dns-recursion-check | 53 | Vulnerability | CRITICAL |
-| dns-amplification-risk | 53 | Vulnerability | HIGH |
-| dns-cache-snooping | 53 | Discovery | MEDIUM |
-| dns-srv-enum | 53 | Discovery | LOW |
-| dns-txt-spf-dmarc-audit | 53 | Defensive | MEDIUM |
-| dns-soa-consistency-check | 53 | Defensive | LOW |
-| dns-wildcard-detector | 53 | Discovery | LOW |
-
-### SSL/TLS Scripts
-
-| Script Name | Port | Category | Threat Level |
-|-------------|------|----------|--------------|
-| ssl-weak-ciphers | 443 | Vulnerability | CRITICAL |
-| ssl-protocol-versions | 443 | Discovery | HIGH |
-| ssl-cert-info | 443 | Discovery | LOW |
-| ssl-cert-expiry | 443 | Defensive | MEDIUM |
-| ssl-cert-hostname-mismatch | 443 | Vulnerability | CRITICAL |
-| ssl-cert-weak-signature | 443 | Vulnerability | HIGH |
-| ssl-compression-check | 443 | Vulnerability | HIGH |
-| ssl-ocsp-stapling | 443 | Defensive | LOW |
-| ssl-secure-renegotiation | 443 | Defensive | MEDIUM |
+### 🟢 LOW - Informational
+- General information gathering
+- Configuration details
+- Non-critical findings
+- Examples: Version detection, feature enumeration
 
 ---
 
-## 🔍 Output Interpretation Guide
+## 🛠️ Advanced Usage & Customization
 
-### Severity Levels
-
-#### 🔴 **CRITICAL** - Immediate Action Required
-- Weak ciphers accepted
-- Zone transfers allowed
-- Open DNS resolver
-- Self-signed certificates
-- Hostname mismatch
-- HTTP TRACE enabled
-
-#### 🟠 **HIGH** - High Priority
-- Incomplete CSP
-- Missing security headers
-- Deprecated TLS versions
-- Weak signatures
-
-#### 🟡 **MEDIUM** - Medium Priority
-- Weak policies
-- Cache snooping
-- Subdomain enumeration possible
-
-#### 🟢 **LOW** - Informational
-- Version disclosure
-- Technology detection
-
----
-
-## 🛠️ Troubleshooting
-
-### Scripts Not Found
+### Combine Multiple Categories
 
 ```bash
-nmap --script-updatedb
-nmap --script-help dns-zone-transfer-check
-ls -la ~/.nmap/scripts/ | grep dns
-```
+# All HTTP and SMB audits
+nmap -p 80,139,443,445 --script 'http-*,smb-*' -v example.com
 
-### Connection Timeouts
-
-```bash
-nmap -p 53,80,443 \
-  --script http-security-headers \
-  --script-args http.timeout=30000 \
-  --host-timeout 1h \
+# All security checks except discovery
+nmap -p 53,80,139,443,445 \
+  --script 'http-security-*,dns-*,smb-security-*,ssl-*' \
   example.com
 ```
 
-### Permission Issues
+### Custom Script Arguments
 
 ```bash
-chmod +x ~/.nmap/scripts/*.nse
-chmod 755 ~/.nmap/scripts/
+# Specify custom domain for DNS checks
+nmap -p 53 --script 'dns-*' \
+  --script-args \
+    dns-zone-transfer-check.domain=example.com,\
+    dns-subdomain-enum.domain=example.com,\
+    dns-txt-spf-dmarc-audit.domain=example.com \
+  8.8.8.8
+
+# Custom ports and arguments
+nmap -p 443,8443 --script 'ssl-*' \
+  --script-args ssl.ciphers=all \
+  example.com
+```
+
+### Output Formats
+
+```bash
+# XML output (best for parsing)
+nmap -p 80,443,53 --script 'http-*,dns-*' -oX results.xml example.com
+
+# Normal text
+nmap -p 80,443,53 --script 'http-*,dns-*' -oN results.txt example.com
+
+# Grepable (for grep/awk)
+nmap -p 80,443,53 --script 'http-*,dns-*' -oG results.grep example.com
+
+# All formats
+nmap -p 80,443,53 --script 'http-*,dns-*' -oA results example.com
 ```
 
 ---
@@ -815,11 +1293,30 @@ chmod 755 ~/.nmap/scripts/
 
 ---
 
-## 📞 Support
+## 🛠️ Troubleshooting
+
+```bash
+# Verify installation
+nmap --script-help http-security-headers
+
+# Update database
+nmap --script-updatedb
+
+# Increase timeout
+nmap -p 80,443 --script http-security-headers \
+  --script-args http.timeout=30000 example.com
+
+# Debug mode
+nmap -p 80,443 --script http-security-headers -d -vv example.com
+```
+
+---
+
+## 📞 Support & Documentation
 
 - **GitHub Issues:** Report bugs and feature requests
-- **GitHub Discussions:** Share ideas and best practices
 - **Nmap Documentation:** https://nmap.org/
+- **NSE Guide:** https://nmap.org/book/nse-usage.html
 
 ---
 
@@ -830,23 +1327,25 @@ See [Nmap Legal](https://nmap.org/book/man-legal.html)
 
 ---
 
-## 📊 Project Statistics
+## 📊 Project Summary
 
-- **Total Scripts:** 30
-- **HTTP Scripts:** 10
-- **DNS Scripts:** 10
-- **SSL/TLS Scripts:** 9
-- **Security Checks:** 70+
-- **Lines of Code:** 2,000+ Lua
+- **Total Scripts:** 37
+- **HTTP Scripts:** 10 (port 80/443)
+- **DNS Scripts:** 9 (port 53)
+- **SMB Scripts:** 9 (port 139/445)
+- **SSL/TLS Scripts:** 9 (port 443)
+- **Total Lines of Code:** 3,000+ Lua
+- **Security Checks:** 90+
+- **Supported Nmap:** 7.40+
 
 ---
 
 **Quick Start:**
 ```bash
 git clone https://github.com/NexzaDev/Nmap-NSE-Script-Collection.git
-cp -r Nmap-NSE-Script-Collection/{HTTP,DNS,SSL-TLS}/* ~/.nmap/scripts/
+cp -r Nmap-NSE-Script-Collection/* ~/.nmap/scripts/
 nmap --script-updatedb
-nmap -p 80,443,53 --script 'http-*,dns-*,ssl-*' -v example.com
+nmap -p 53,80,139,443,445 --script 'http-*,dns-*,smb-*,ssl-*' example.com
 ```
 
-**All scripts are production-ready and immediately deployable!**
+**All 37 scripts are production-ready and immediately deployable!** 🚀
